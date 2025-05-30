@@ -1,0 +1,1015 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>Build With AI - Gemini For Smarter Apps</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/claat-public/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14" ga4id=""></google-codelab-analytics>
+  <google-codelab codelab-gaid=""
+                  codelab-ga4id=""
+                  id="buildwai25"
+                  title="Build With AI - Gemini For Smarter Apps"
+                  environment="web"
+                  feedback-link="https://github.com/SolaceDev/solace-dev-codelabs/blob/master/markdown/buildwai25">
+    
+      <google-codelab-step label="What you&#39;ll learn: Overview" duration="5">
+        <p>Welcome to the exciting world of Gemini and Flutter!</p>
+<p>This is a codelab series focused on Gemini using Flutter, in which you&#39;ll learn the following:</p>
+<h2 is-upgraded>What Makes an App &#34;Smart&#34;?</h2>
+<ul>
+<li>Reactive to user input</li>
+<li>Predictive or Generative</li>
+<li>Personalized experience for user</li>
+<li>Capable of understanding natural language</li>
+</ul>
+<h2 is-upgraded>Real-World Use Cases</h2>
+<ul>
+<li>E-Commerce</li>
+<li>Smart assistants</li>
+<li>Medical</li>
+<li>Reporting summaries and insights</li>
+</ul>
+<h2 is-upgraded>Brief Overview of Gemini API</h2>
+<ul>
+<li>Google&#39;s generative AI model family</li>
+<li>Multimodel capabilities: Text, image, code</li>
+</ul>
+<p class="image-container"><img alt="Gemini screenshot" src="img/b37524f6415065ad.jpeg"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Prerequisites" duration="0">
+        <p>Before we start, make sure you have:</p>
+<h2 is-upgraded>Tools</h2>
+<ul>
+<li>Flutter SDK installed</li>
+<li>Android Studio or VSCode</li>
+<li>Optional: FirebaseStudio (ProjectIDX)</li>
+<li>Emulator or physical device setup</li>
+</ul>
+<h2 is-upgraded>Free credits</h2>
+<ul>
+<li>Access free credits for GDGLahore workshops</li>
+</ul>
+<h2 is-upgraded>Gemini API Key</h2>
+<ul>
+<li>Visit: https://aistudio.google.com/</li>
+<li>Click &#34;Get API Key&#34; (Requires a Google account)</li>
+<li>Choose a project or create new</li>
+<li>Apply free credits or billing if prompted</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="FirebaseStudio (ProjectIDX)" duration="0">
+        <p>If you don&#39;t want to set up your machine with Flutter at the moment, you can use FirebaseStudio (https://studio.firebase.google.com), an entirely web-based workspace for full-stack application development, complete with the latest generative AI from Gemini, and full-fidelity app previews, powered by cloud emulators.</p>
+<p class="image-container"><img alt="Gemini screenshot" src="img/715c7afe0c9f0414.jpeg"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Create a Flutter App" duration="0">
+        <h2 is-upgraded>Step 1: Create and Run the App</h2>
+<p>You can create a Flutter project from Android Studio UI.</p>
+<p class="image-container"><img alt="Android Studio screenshot" src="img/11b2b344e92ed449.png"></p>
+<p>Or if you prefer commandline. Run following commands:</p>
+<pre><code language="language-bash" class="language-bash">flutter create build_with_ai_25
+cd build_with_ai_25
+flutter run
+</code></pre>
+<p>Verify the app runs on your web / simulator or device.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Make Basic UI Changes" duration="0">
+        <p>Let&#39;s update some UI to include:</p>
+<ul>
+<li>A simple input field</li>
+<li>A &#34;Generate&#34; button</li>
+<li>A text area for output</li>
+</ul>
+<p>Create a new file called <code>generate_text.dart</code> and copy and paste following:</p>
+<pre><code language="language-dart" class="language-dart">import &#39;package:flutter/material.dart&#39;;
+
+
+class GenerateTextPage extends StatefulWidget {
+  const GenerateTextPage({super.key});
+
+  @override
+  _GenerateTextPageState createState() =&gt; _GenerateTextPageState();
+}
+
+class _GenerateTextPageState extends State&lt;GenerateTextPage&gt; {
+  final TextEditingController _inputController = TextEditingController();
+  String _outputText = &#39;&#39;;
+
+  void _generateOutput() {
+    setState(() {
+      _outputText = _inputController.text;
+    });
+  }
+
+  @override
+  void dispose() {
+    _inputController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(&#39;Smart App Demo&#39;),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            TextField(
+              controller: _inputController,
+              decoration: InputDecoration(
+                labelText: &#39;Enter something&#39;,
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: _generateOutput,
+              child: Text(&#39;Generate&#39;),
+            ),
+            const SizedBox(height: 16),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    _outputText,
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+</code></pre>
+<p>now Open <code>lib/main.dart</code> and make it open <code>GenerateTextPage</code> ui.</p>
+<p>add import statement like:</p>
+<pre><code language="language-dart" class="language-dart">import &#39;generate_text.dart&#39;;
+</code></pre>
+<p>find home key in build function and point it to load <code>GenerateTextPage</code></p>
+<pre><code language="language-dart" class="language-dart">...
+
+      home: const GenerateTextPage(),
+
+...
+</code></pre>
+<p>It should load some UI like below:</p>
+<p class="image-container"><img alt="Preview Gen Text" src="img/f380d873fe2d77b4.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Add Gemini" duration="0">
+        <p>Flutter 3.32.0 introduced <code>firebase_ai</code> formerly called &#34;Vertex AI in Firebase&#34;. It is a client sdk for Flutter Apps. When working in production environment. You should definitely use <code>firebase_ai</code>.</p>
+<p>However for quick prototyping, we can use <code>google_generative_ai</code> package. It is unsafe and for prototyping only.</p>
+<h2 is-upgraded>Step 1: Add Generative AI</h2>
+<p>Add the official Google Generative AI Dart SDK:</p>
+<pre><code language="language-yaml" class="language-yaml">dependencies:
+  google_generative_ai: ^0.4.7
+</code></pre>
+<p>It has been depricated. But We will use it for prototyping only.</p>
+<p>Then do flutter pub get in the UI or from Terminal, run:</p>
+<pre><code language="language-bash" class="language-bash">flutter pub get
+</code></pre>
+<h2 is-upgraded>Step 2: Instantiate GenerativeModel</h2>
+<p>Open <code>lib/generate_text.dart</code> and add an import statement:</p>
+<pre><code language="language-dart" class="language-dart">import &#39;package:google_generative_ai/google_generative_ai.dart&#39;;
+</code></pre>
+<p>Create a field in <code>GenerateTextPage</code> and initilize it in initSatate() function:</p>
+<pre><code language="language-dart" class="language-dart">final apiKey = &#34;YOUR_API_KEY&#34;;
+var _model;
+
+@override
+void initState() {
+    super.initState();
+
+    _model = GenerativeModel(
+        model: &#34;gemini-2.5-pro-preview-05-06&#34;,
+        apiKey: apiKey,
+    );
+}
+</code></pre>
+<h2 is-upgraded>Step 3: Call the API</h2>
+<p>make modifications in <code>_generateOutput()</code> as below, also add <code>async</code> keyword to the function signature</p>
+<pre><code language="language-dart" class="language-dart">void _generateOutput() async {
+
+
+    final response = await _model.generateContent([
+        Content.text(_inputController.text)
+    ]);
+
+    print(response.text);
+    
+    setState(() {
+      _outputText = response.text;
+    });
+}
+</code></pre>
+<p>Display this output in your UI for a basic AI experience.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Add Products UI" duration="0">
+        <p>Let&#39;s update some UI to include:</p>
+<ul>
+<li>An image picker field</li>
+<li>Some product related fields</li>
+<li>A button to submit the form</li>
+</ul>
+<p class="image-container"><img alt="Product Form Preview" src="img/f57b092c2c6f52b1.png"></p>
+<h3 is-upgraded>Image Picker Dep</h3>
+<p>So first lets add the dependency to pubspec.yaml file as below:</p>
+<pre><code language="language-yaml" class="language-yaml">dependencies:
+  google_generative_ai: ^0.4.7
+  image_picker: 1.0.4
+</code></pre>
+<p>Then do flutter pub get in the UI or from Terminal, run:</p>
+<pre><code language="language-bash" class="language-bash">flutter pub get
+</code></pre>
+<h3 is-upgraded>Add Product UI</h3>
+<p>Create a new file called <code>add_product.dart</code> and copy and paste following:</p>
+<pre><code language="language-dart" class="language-dart">import &#39;dart:convert&#39;;
+
+import &#39;package:flutter/material.dart&#39;;
+import &#39;dart:io&#39;;
+import &#39;package:image_picker/image_picker.dart&#39;;
+
+
+class AddProductPage extends StatefulWidget {
+  const AddProductPage({Key? key}) : super(key: key);
+
+  @override
+  State&lt;AddProductPage&gt; createState() =&gt; _AddProductPageState();
+}
+
+class _AddProductPageState extends State&lt;AddProductPage&gt; {
+  // Form key for validation
+  final _formKey = GlobalKey&lt;FormState&gt;();
+  
+  // Image file
+  File? _selectedImage;
+  
+  // Class level array for item types
+  final List&lt;String&gt; _itemTypes = [&#39;Fashion&#39;, &#39;Toys&#39;, &#39;Electronics&#39;, &#39;Books&#39;, &#39;Home&#39;, &#39;Sports&#39;, &#34;Fruits&#34;];
+  
+  // List of additional features tags
+  final List&lt;String&gt; _additionalFeatures = [];
+  
+  // Controller for the tag input field
+  final TextEditingController _tagController = TextEditingController();
+  final TextEditingController _locationController = TextEditingController();
+
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _priceController = TextEditingController();
+
+  // Class level map to track all inputs
+  final Map&lt;String, dynamic&gt; _formData = {
+    &#39;image&#39;: null,
+    &#39;location&#39;: &#39;&#39;,
+    &#39;itemType&#39;: &#39;&#39;, // Default value
+    &#39;price&#39;: &#39;&#39;,
+    &#39;title&#39;: &#39;&#39;,
+    &#39;description&#39;: &#39;&#39;,
+    &#39;additionalFeatures&#39;: &lt;String&gt;[],
+  };
+  
+  // Method to pick image from gallery
+  Future&lt;void&gt; _pickImage() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    
+    if (image != null) {
+      setState(() {
+        _selectedImage = File(image.path);
+        _formData[&#39;image&#39;] = image.path;
+      });
+    }
+  }
+  
+  // Method to get location from Google Places (placeholder)
+  void _pickLocation() async {
+    // In a real implementation, this would integrate with Google Places API
+    // For now, just show a placeholder dialog
+    void _selectLocation(String location) {
+      setState(() {
+        _formData[&#39;location&#39;] = location;
+        _locationController.text = location;
+      });
+      Navigator.of(context).pop();
+    }
+    showDialog&lt;String&gt;(
+      context: context,
+      builder: (context) =&gt; SimpleDialog(
+        title: const Text(&#39;Select Location&#39;),
+        children: [
+          SimpleDialogOption(
+            onPressed: () =&gt; _selectLocation(&#39;Johar Town, Lahore&#39;),
+            child: const Text(&#39;Johar Town, Lahore&#39;),
+          ),
+          SimpleDialogOption(
+            onPressed: () =&gt; _selectLocation(&#39;Model Town, Lahore&#39;),
+            child: const Text(&#39;Model Town, Lahore&#39;),
+          ),
+          SimpleDialogOption(
+            onPressed: () =&gt; _selectLocation(&#39;Gulberg 3, Lahore&#39;),
+            child: const Text(&#39;Gulberg 3, Lahore&#39;),
+          ),
+        ],
+      ),
+    );
+  }
+  
+  // Method to add a tag to additional features
+  void _addTag(String tag) {
+    if (tag.isNotEmpty &amp;&amp; !_additionalFeatures.contains(tag)) {
+      setState(() {
+        _additionalFeatures.add(tag);
+        _formData[&#39;additionalFeatures&#39;] = _additionalFeatures;
+      });
+      _tagController.clear();
+    }
+  }
+  
+  // Method to remove a tag from additional features
+  void _removeTag(String tag) {
+    setState(() {
+      _additionalFeatures.remove(tag);
+      _formData[&#39;additionalFeatures&#39;] = _additionalFeatures;
+    });
+  }
+  
+  // Method to submit the form
+  Future&lt;void&gt; _submitForm() async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      
+      // Validate image
+      if (_formData[&#39;image&#39;] == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text(&#39;Please upload an image&#39;)),
+        );
+        return;
+      }
+      
+      // Display loading indicator
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) =&gt; const Center(child: CircularProgressIndicator()),
+      );
+      
+      try {
+        // Convert image to MultipartFile
+        final imageFile = _formData[&#39;image&#39;];
+        
+        // Create FormData object
+        final formData = {
+          &#39;image&#39;: imageFile,
+          &#39;location&#39;: _formData[&#39;location&#39;],
+          &#39;itemType&#39;: _formData[&#39;itemType&#39;],
+          &#39;price&#39;: _formData[&#39;price&#39;],
+          &#39;title&#39;: _formData[&#39;title&#39;],
+          &#39;description&#39;: _formData[&#39;description&#39;],
+          &#39;additionalFeatures&#39;: _formData[&#39;additionalFeatures&#39;],
+        };
+        
+        // Hide loading indicator
+        Navigator.of(context).pop();
+        
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text(&#39;Item added successfully&#39;)),
+        );
+      } catch (e) {
+        // Show error message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(&#39;Error: ${e.toString()}&#39;)),
+        );
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(&#39;Add Item&#39;),
+      ),
+      body: Form(
+        key: _formKey,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Add Image Section
+              const Text(
+                &#39;Add Image&#39;,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF2D3643),
+                ),
+              ),
+              const SizedBox(height: 10),
+              GestureDetector(
+                onTap: _pickImage,
+                child: Container(
+                  width: double.infinity,
+                  height: 138,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(9),
+                    border: Border.all(
+                      color: const Color(0xFF25ADDE),
+                      width: 2,
+                      style: BorderStyle.solid,
+                    ),
+                  ),
+                  child: _selectedImage != null
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Image.file(
+                            _selectedImage!,
+                            fit: BoxFit.cover,
+                          ),
+                        )
+                      : const Center(
+                          child: Text(
+                            &#39;Upload Image&#39;,
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: Color(0xFF25ADDE),
+                            ),
+                          ),
+                        ),
+                ),
+              ),
+              const SizedBox(height: 30),
+
+              // Location Field
+              const Text(
+                &#39;Location&#39;,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF2D3643),
+                ),
+              ),
+              const SizedBox(height: 10),
+              TextFormField(
+                controller: _locationController,
+                decoration: InputDecoration(
+                  hintText: &#39;Your location here&#39;,
+                  hintStyle: const TextStyle(
+                    fontSize: 14,
+                    color: Color(0xFFABB5C5),
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5),
+                    borderSide: const BorderSide(color: Color(0xFFD3D5DA)),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 15),
+                  suffixIcon: IconButton(
+                    icon: const Icon(
+                      Icons.my_location,
+                      color: Color(0xFF25ADDE),
+                    ),
+                    onPressed: _pickLocation,
+                  ),
+                ),
+                onSaved: (value) {
+                  _formData[&#39;location&#39;] = value ?? &#39;&#39;;
+                },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return &#39;Please enter a location&#39;;
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 30),
+
+
+              // Price Dropdown
+              const Text(
+                &#39;Price&#39;,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF2D3643),
+                ),
+              ),
+              const SizedBox(height: 10),
+              TextFormField(
+                controller: _priceController,
+                decoration: InputDecoration(
+                  hintText: &#39;Price for item&#39;,
+                  hintStyle: const TextStyle(
+                    fontSize: 14,
+                    color: Color(0xFFABB5C5),
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5),
+                    borderSide: const BorderSide(color: Color(0xFFD3D5DA)),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 15),
+                ),
+                onSaved: (value) {
+                  _formData[&#39;price&#39;] = value ?? &#39;&#39;;
+                },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return &#39;Please enter a price&#39;;
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 30),
+
+
+              // Item Type Dropdown
+              const Text(
+                &#39;Item Type&#39;,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF2D3643),
+                ),
+              ),
+              const SizedBox(height: 10),
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: const Color(0xFFD3D5DA)),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: DropdownButtonFormField&lt;String&gt;(
+                  value: _formData[&#39;itemType&#39;].isNotEmpty ? _formData[&#39;itemType&#39;] : null,
+                  isExpanded: true,
+                  decoration: const InputDecoration(
+                    contentPadding: EdgeInsets.symmetric(horizontal: 15),
+                    border: InputBorder.none,
+                  ),
+                  hint: const Text(
+                    &#39;Select the item type&#39;,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Color(0xFFABB5C5),
+                    ),
+                  ),
+                  items: _itemTypes.map((String type) {
+                    return DropdownMenuItem&lt;String&gt;(
+                      value: type,
+                      child: Text(type),
+                    );
+                  }).toList(),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      _formData[&#39;itemType&#39;] = newValue!;
+                    });
+                  },
+                ),
+              ),
+              const SizedBox(height: 30),
+
+
+              // Title Field
+              const Text(
+                &#39;Title&#39;,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF2D3643),
+                ),
+              ),
+              const SizedBox(height: 10),
+              TextFormField(
+                controller: _titleController,
+                decoration: InputDecoration(
+                  hintText: &#39;Title for item&#39;,
+                  hintStyle: const TextStyle(
+                    fontSize: 14,
+                    color: Color(0xFFABB5C5),
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5),
+                    borderSide: const BorderSide(color: Color(0xFFD3D5DA)),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 15),
+                ),
+                onSaved: (value) {
+                  _formData[&#39;title&#39;] = value ?? &#39;&#39;;
+                },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return &#39;Please enter a title&#39;;
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 30),
+              
+              // Description Field
+              const Text(
+                &#39;Description&#39;,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF2D3643),
+                ),
+              ),
+              const SizedBox(height: 10),
+              TextFormField(
+                controller: _descriptionController,
+                decoration: InputDecoration(
+                  hintText: &#39;Description here&#39;,
+                  hintStyle: const TextStyle(
+                    fontSize: 14,
+                    color: Color(0xFFABB5C5),
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5),
+                    borderSide: const BorderSide(color: Color(0xFFD3D5DA)),
+                  ),
+                  contentPadding: const EdgeInsets.all(15),
+                ),
+                maxLines: 10,
+                onSaved: (value) {
+                  _formData[&#39;description&#39;] = value ?? &#39;&#39;;
+                },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return &#39;Please enter a description&#39;;
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 30),
+              
+              // Additional Features
+              const Text(
+                &#39;Additional Features&#39;,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF2D3643),
+                ),
+              ),
+              const SizedBox(height: 10),
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  border: Border.all(color: const Color(0xFFD3D5DA)),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Column(
+                  children: [
+                    // Display tags
+                    Wrap(
+                      spacing: 10,
+                      children: _additionalFeatures.map((tag) {
+                        return Chip(label: Text(tag,
+                          style: TextStyle(
+                          fontSize: 10
+                        ),));
+                      }).toList(),
+                    ),
+                    const SizedBox(height: 10),
+                    // Input for new tags
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: _tagController,
+                            decoration: const InputDecoration(
+                              hintText: &#39;Add a feature tag&#39;,
+                              hintStyle: TextStyle(
+                                fontSize: 14,
+                                color: Color(0xFFABB5C5),
+                              ),
+                              border: InputBorder.none,
+                            ),
+                            onSubmitted: (value) =&gt; _addTag(value),
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(
+                            Icons.add_circle_outline,
+                          ),
+                          onPressed: () =&gt; _addTag(_tagController.text),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 40),
+              
+              // Add Button
+              SizedBox(
+                width: double.infinity,
+                height: 48,
+                child: Row(
+                  children: [
+                    ElevatedButton(
+                      onPressed: _submitForm,
+
+                      child: const Text(
+                        &#39;Add&#39;,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 30),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _tagController.dispose();
+    super.dispose();
+  }
+
+}
+
+</code></pre>
+<h3 is-upgraded>Open Product UI</h3>
+<p>Now Open <code>lib/main.dart</code> and make it open <code>AddProductPage</code> ui.</p>
+<p>add import statement like:</p>
+<pre><code language="language-dart" class="language-dart">import &#39;add_product.dart&#39;;
+</code></pre>
+<p>find home key in build function and point it to load <code>AddProductPage</code></p>
+<pre><code language="language-dart" class="language-dart">...
+
+      home: const AddProductPage(),
+
+...
+</code></pre>
+<p>Re launch and it should show the Add Product UI.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Add Products Using AI" duration="0">
+        <p>Let&#39;s apply Gemini to a real-world task: generating product details (title, tags, descriptions).</p>
+<h2 is-upgraded>Step 1: Discuss the Use Case</h2>
+<p>Lets talk about how generative AI improves:</p>
+<ul>
+<li>Speed of data entry</li>
+<li>Consistency and creativity in descriptions</li>
+<li>User engagement</li>
+</ul>
+<h2 is-upgraded>Step 2: Instantiate GenerativeModel</h2>
+<p>Open <code>lib/generate_text.dart</code> and add an import statement:</p>
+<pre><code language="language-dart" class="language-dart">import &#39;package:google_generative_ai/google_generative_ai.dart&#39;;
+</code></pre>
+<p>Create a field in <code>AddProductPage</code> and initilize it in initSatate() function:</p>
+<pre><code language="language-dart" class="language-dart">final apiKey = &#34;YOUR_API_KEY&#34;;
+var _model;
+
+@override
+void initState() {
+    super.initState();
+
+    _model = GenerativeModel(
+        model: &#34;gemini-2.5-pro-preview-05-06&#34;,
+        apiKey: apiKey,
+    );
+}
+</code></pre>
+<h2 is-upgraded>Step 3: Generation Config for Structured Response</h2>
+<p>When we want models to return specific formats and specific schemas, we use <code>GenerationConfig()</code> to define what kind of out put we are expecting. Not only define the response structure but also what kind of type of properties we are expecting.</p>
+<pre><code language="language-dart" class="language-dart">final List&lt;String&gt; _itemTypes = [&#39;Fashion&#39;, &#39;Toys&#39;, &#39;Electronics&#39;, &#39;Books&#39;, &#39;Home&#39;, &#39;Sports&#39;, &#34;Fruits&#34;];
+...
+    _model = GenerativeModel(
+        model: &#34;gemini-2.5-pro-preview-05-06&#34;,
+        apiKey: apiKey,
+        generationConfig: GenerationConfig(
+          responseMimeType: &#34;application/json&#34;,
+          responseSchema: Schema.object(
+              properties: {
+                &#34;title&#34; : Schema.string(),
+                &#34;description&#34; : Schema.string(),
+                &#34;type&#34; : Schema.enumString(
+                  enumValues: _itemTypes,
+                  description: &#34;The type of the item&#34;
+                ),
+                &#34;features&#34; : Schema.array(items: Schema.string())
+              },
+            // Crucially, define which properties MUST be in the response:
+            requiredProperties: [
+              &#34;title&#34;,
+              &#34;description&#34;,
+              &#34;features&#34;,
+              &#34;type&#34;,
+            ],
+              )
+
+        )
+    );
+</code></pre>
+<h2 is-upgraded>Step 4: Power &#34;Add Product&#34; with Gemini</h2>
+<p>Add a button to UI like below:</p>
+<pre><code language="language-dart" class="language-dart">    ...
+    ElevatedButton(
+        onPressed: generateAIContent,
+        child: const Text(
+        &#39;Generate AI Content&#39;,
+        ),
+    ),
+    ...
+</code></pre>
+<p>and a function at bottom of the file:</p>
+<pre><code language="language-dart" class="language-dart">void  generateAIContent() {
+
+}
+</code></pre>
+<h2 is-upgraded>Step 5: Engineer a simple Prompt</h2>
+<aside class="special"><p> I am listing this item for sale at online market. Its location is ${LOCATION}. Its price is ${PRICE} pkr. Help me write a appealing title, 10 lines of description, type and features of this item. The tone should be natural.</p>
+</aside>
+<h2 is-upgraded>Step 6: Insert prompt in code</h2>
+<p>Create a function <code>generateAIContent()</code> so when button pressed, send input to Gemini:</p>
+<pre><code language="language-dart" class="language-dart">void  generateAIContent() async {
+
+    if (_selectedImage == null) return;
+
+    String prompt = &#34;I&#39;m listing this item for sale at online market&#34;;
+    if (_formData[&#34;location&#34;] != null &amp;&amp; _formData[&#34;location&#34;].isNotEmpty) {
+      prompt = &#34;$prompt. Its location is ${_formData[&#34;location&#34;]}.&#34;;
+    }
+
+    if (_priceController.text.isNotEmpty) {
+      prompt = &#34;$prompt. Its price is ${_priceController.text} pkr.&#34;;
+    }
+
+    prompt = &#34;$prompt. Help me write a appealing title, 10 lines of description, type and features of this item.&#34;
+        &#34; The tone should be natural.&#34;;
+    print(&#34;gemini prompt is $prompt&#34;);
+
+}
+</code></pre>
+<h2 is-upgraded>Step 7: Send prompt to Gemini with Image</h2>
+<p>Add following to the generateAIContent() function at the bottom:</p>
+<pre><code language="language-dart" class="language-dart">    final content = Content.multi(
+      [
+        TextPart(prompt),
+        DataPart(&#34;image/png&#34;, _selectedImage!.readAsBytesSync())
+      ]
+    );
+    var response = await _model.generateContent([content]);
+
+</code></pre>
+<p>We are testing the Gemini multi-modality. It understands text as well as photos.</p>
+<h2 is-upgraded>Step 8: Parse Gemini Response and Update UI</h2>
+<p>Let&#39;s parse response. We know it is going to be JSON:</p>
+<pre><code language="language-dart" class="language-dart">    var responseJson = jsonDecode(response.text);
+
+    _titleController.text = responseJson[&#34;title&#34;] ?? &#34;&#34;;
+    _formData[&#34;itemType&#34;] = responseJson[&#34;type&#34;] ?? &#34;&#34;;
+    _descriptionController.text = responseJson[&#34;description&#34;] ?? &#34;&#34;;
+    if (responseJson[&#34;features&#34;] != null &amp;&amp; responseJson[&#34;features&#34;].isNotEmpty ) {
+      _additionalFeatures.clear();
+      for (String feature in responseJson[&#34;features&#34;]) {
+        _additionalFeatures.add(feature);
+      }
+    }
+    setState(() {
+        //to refresh UI
+    });
+</code></pre>
+<h2 is-upgraded>Step 9: The final function</h2>
+<pre><code language="language-dart" class="language-dart">void  generateAIContent() async {
+
+    if (_selectedImage == null) return;
+
+    String prompt = &#34;I&#39;m listing this item for sale at online market&#34;;
+    if (_formData[&#34;location&#34;] != null &amp;&amp; _formData[&#34;location&#34;].isNotEmpty) {
+      prompt = &#34;$prompt. Its location is ${_formData[&#34;location&#34;]}.&#34;;
+    }
+
+    if (_priceController.text.isNotEmpty) {
+      prompt = &#34;$prompt. Its price is ${_priceController.text} pkr.&#34;;
+    }
+
+    prompt = &#34;$prompt. Help me write a appealing title, 10 lines of description, type and features of this item.&#34;
+        &#34; The tone should be natural.&#34;;
+    print(&#34;gemini prompt is $prompt&#34;);
+    final content = Content.multi(
+      [
+        TextPart(prompt),
+        DataPart(&#34;image/png&#34;, _selectedImage!.readAsBytesSync())
+      ]
+    );
+    var response = await _model.generateContent([content]);
+    print(&#34;gemini response is ${response.text}&#34;);
+    var responseJson = jsonDecode(response.text);
+
+    _titleController.text = responseJson[&#34;title&#34;] ?? &#34;&#34;;
+    _formData[&#34;itemType&#34;] = responseJson[&#34;type&#34;] ?? &#34;&#34;;
+    _descriptionController.text = responseJson[&#34;description&#34;] ?? &#34;&#34;;
+    if (responseJson[&#34;features&#34;] != null &amp;&amp; responseJson[&#34;features&#34;].isNotEmpty ) {
+      _additionalFeatures.clear();
+      for (String feature in responseJson[&#34;features&#34;]) {
+        _additionalFeatures.add(feature);
+      }
+    }
+    setState(() {});
+}
+
+</code></pre>
+<p>Result: A smart product form that auto-generates compelling title, descriptions, types and features.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="✅ Wrap Up" duration="0">
+        <h2 is-upgraded>🔁 Recap of What You Did</h2>
+<p>In this codelab, you:</p>
+<ul>
+<li>✅ Created a basic <strong>Flutter app</strong></li>
+<li>✅ Built a smart UI with an input field, generate button, and output area</li>
+<li>✅ Integrated the <strong>Gemini API</strong> using the <code>google_generative_ai</code> package</li>
+<li>✅ Used <strong>text and image prompts</strong> to generate contextual product data</li>
+<li>✅ Built a dynamic product form that leverages <strong>AI for smart content generation</strong></li>
+</ul>
+<h2 is-upgraded>🧠 Key Takeaways</h2>
+<ul>
+<li>AI can supercharge even basic apps by automating content generation</li>
+<li>Gemini makes it easy to work with <strong>text, images, and structured JSON</strong></li>
+<li>Flutter provides a great foundation for building <strong>intelligent mobile UIs</strong></li>
+<li>Schema-guided generation ensures <strong>predictable, structured outputs</strong></li>
+</ul>
+<h2 is-upgraded>🔗 Resources to Explore</h2>
+<ul>
+<li><a href="https://flutter.dev" target="_blank">Flutter.dev</a> – Build beautiful apps</li>
+<li><a href="https://aistudio.google.com/" target="_blank">Gemini API</a> – Google&#39;s GenAI Playground</li>
+<li><a href="https://pub.dev/packages/google_generative_ai" target="_blank">google_generative_ai package</a> – Dart SDK</li>
+<li><a href="https://studio.firebase.google.com" target="_blank">Firebase Studio</a> – No-setup cloud IDE with AI support</li>
+</ul>
+<h2 is-upgraded>🙌 What&#39;s Next?</h2>
+<ul>
+<li>Try more complex prompts</li>
+<li>Use Gemini with voice and chat features</li>
+<li>Connect Gemini responses to real data models</li>
+<li>Use <code>firebase_ai</code> for secure production use</li>
+</ul>
+<p>Thanks for learning with us! 🚀</p>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="https://storage.googleapis.com/claat-public/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/prettify.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/codelab-elements.js"></script>
+  <script src="//support.google.com/inapp/api.js"></script>
+
+</body>
+</html>

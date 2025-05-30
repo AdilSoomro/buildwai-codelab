@@ -1,0 +1,22 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "https://storage.googleapis.com",
+  "mainga": "UA-49880327-14",
+  "updated": "2025-05-30T23:49:10+05:00",
+  "id": "buildwai25",
+  "duration": 5,
+  "title": "Build With AI - Gemini For Smarter Apps",
+  "summary": "",
+  "source": "buildwai25.md",
+  "theme": "",
+  "status": [
+    "published"
+  ],
+  "category": null,
+  "tags": [
+    "web"
+  ],
+  "feedback": "https://github.com/SolaceDev/solace-dev-codelabs/blob/master/markdown/buildwai25",
+  "url": "buildwai25"
+}
