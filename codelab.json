@@ -3,11 +3,11 @@
   "format": "html",
   "prefix": "https://storage.googleapis.com",
   "mainga": "UA-49880327-14",
-  "updated": "2025-05-31T00:02:11+05:00",
+  "updated": "2025-05-31T00:36:33+05:00",
   "id": "buildwai25",
-  "duration": 5,
+  "duration": 0,
   "title": "Build With AI - Gemini For Smarter Apps",
-  "summary": "",
+  "summary": "Build With AI - Gemini For Smarter Apps",
   "source": "buildwai25.md",
   "theme": "",
   "status": [
@@ -15,8 +15,16 @@
   ],
   "category": null,
   "tags": [
-    "web"
+    "android",
+    "firebase",
+    "flutter",
+    "gemini",
+    "ios",
+    "linux",
+    "mac",
+    "web",
+    "windows"
   ],
-  "feedback": "https://github.com/SolaceDev/solace-dev-codelabs/blob/master/markdown/buildwai25",
+  "feedback": "https://github.com/AdilSoomro/BuildwAI25/issues",
   "url": "buildwai25"
 }
